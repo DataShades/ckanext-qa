@@ -1,15 +1,16 @@
+from __future__ import absolute_import
 import re
 import zipfile
 import os
 from collections import defaultdict
 import subprocess
-import StringIO
+from six import StringIO
 
 import xlrd
 import magic
 import messytables
 
-import lib
+from . import lib
 from ckan.lib import helpers as ckan_helpers
 
 import logging
@@ -318,9 +319,9 @@ def get_xml_variant_without_xml_declaration(buf):
     p.StartElementHandler = start_element
     try:
         p.Parse(buf)
-    except GotFirstTag, e:
+    except GotFirstTag as e:
         top_level_tag_name = str(e).lower()
-    except xml.sax.SAXException, e:
+    except xml.sax.SAXException as e:
         log.info('Sax parse error: %s %s', e, buf)
         return {'format': 'XML'}
 
@@ -381,11 +382,11 @@ def get_zipped_format(filepath):
             filepaths = zip.namelist()
         finally:
             zip.close()
-    except zipfile.BadZipfile, e:
+    except zipfile.BadZipfile as e:
         log.info('Zip file open raised error %s: %s',
                  e, e.args)
         return
-    except Exception, e:
+    except Exception as e:
         log.warning('Zip file open raised exception %s: %s',
                     e, e.args)
         return
@@ -438,7 +439,7 @@ def get_zipped_format(filepath):
 def is_excel(filepath):
     try:
         xlrd.open_workbook(filepath)
-    except Exception, e:
+    except Exception as e:
         log.info('Not Excel - failed to load: %s %s', e, e.args)
         return False
     else:

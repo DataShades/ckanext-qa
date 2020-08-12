@@ -1,13 +1,12 @@
+from __future__ import absolute_import
 import os
 import json
 import re
 import logging
-
-from pylons import config
-
 from ckan import plugins as p
-import tasks
+from . import tasks
 
+config = p.toolkit.config
 log = logging.getLogger(__name__)
 
 _RESOURCE_FORMAT_SCORES = None
@@ -55,7 +54,7 @@ def resource_format_scores():
         with open(json_filepath) as format_file:
             try:
                 file_resource_formats = json.loads(format_file.read())
-            except ValueError, e:
+            except ValueError as e:
                 # includes simplejson.decoder.JSONDecodeError
                 raise ValueError('Invalid JSON syntax in %s: %s' %
                                  (json_filepath, e))

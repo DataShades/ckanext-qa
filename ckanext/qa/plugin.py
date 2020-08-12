@@ -1,13 +1,14 @@
+from __future__ import absolute_import
 import logging
 
 import ckan.model as model
 import ckan.plugins as p
 
 from ckanext.archiver.interfaces import IPipe
-from logic import action, auth
-from model import QA, aggregate_qa_for_a_dataset
-import helpers
-import lib
+from .logic import action, auth
+from .model import QA, aggregate_qa_for_a_dataset
+from . import helpers
+from . import lib
 from ckanext.report.interfaces import IReport
 
 
@@ -16,7 +17,6 @@ log = logging.getLogger(__name__)
 
 class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
     p.implements(p.IConfigurer, inherit=True)
-    p.implements(p.IRoutes, inherit=True)
     p.implements(IPipe, inherit=True)
     p.implements(IReport)
     p.implements(p.IActions)
@@ -24,10 +24,22 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
     p.implements(p.ITemplateHelpers)
     p.implements(p.IPackageController, inherit=True)
 
+    if p.toolkit.check_ckan_version('2.9'):
+        p.implements(p.IBlueprint)
+    else:
+        p.implements(p.IRoutes, inherit=True)
+
+
     # IConfigurer
 
     def update_config(self, config):
         p.toolkit.add_template_directory(config, 'templates')
+
+    # IBlueprint
+
+    def get_blueprint(self):
+        from ckanext.qa.views import get_blueprints
+        return get_blueprints()
 
     # IRoutes
 

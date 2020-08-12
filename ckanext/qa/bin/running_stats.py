@@ -31,6 +31,7 @@ print package_stats.report()
 > not deleted: 70 spending-bristol, ...
 
 '''
+from __future__ import print_function
 
 import copy
 import datetime
@@ -110,6 +111,6 @@ if __name__ == '__main__':
     package_stats.add('Success', 'good3')
     package_stats.add('Success', 'good4')
     package_stats.add('Failure', 'bad1')
-    print package_stats.report()
+    print(package_stats.report())
 
-    print StatsList().report()
+    print(StatsList().report())

@@ -2,11 +2,12 @@
 Provide some Quality Assurance by scoring datasets against Sir Tim
 Berners-Lee\'s five stars of openness
 '''
+from __future__ import absolute_import
 import datetime
 import json
 import os
 import traceback
-import urlparse
+from six.moves.urllib.parse import urlparse
 import routes
 
 from ckan.common import _
@@ -14,8 +15,8 @@ from ckan.common import _
 from ckan.lib import i18n
 from ckan.plugins import toolkit
 import ckan.lib.helpers as ckan_helpers
-from sniff_format import sniff_file_format
-import lib
+from .sniff_format import sniff_file_format
+from . import lib
 from ckanext.archiver.model import Archival, Status
 
 import logging
@@ -71,7 +72,7 @@ def load_config(ckan_ini_filepath):
                                              conf.local_conf)
 
     # give routes enough information to run url_for
-    parsed = urlparse.urlparse(conf.get('ckan.site_url', 'http://0.0.0.0'))
+    parsed = urlparse(conf.get('ckan.site_url', 'http://0.0.0.0'))
     request_config = routes.request_config()
     request_config.host = parsed.netloc + parsed.path
     request_config.protocol = parsed.scheme
@@ -115,7 +116,7 @@ def update_package(ckan_ini_filepath, package_id):
 
     try:
         update_package_(package_id)
-    except Exception, e:
+    except Exception as e:
         log.error('Exception occurred during QA update_package: %s: %s',
                   e.__class__.__name__,  unicode(e))
         raise
@@ -154,7 +155,7 @@ def update(ckan_ini_filepath, resource_id):
     load_config(ckan_ini_filepath)
     try:
         update_resource_(resource_id)
-    except Exception, e:
+    except Exception as e:
         log.error('Exception occurred during QA update_resource: %s: %s',
                   e.__class__.__name__,  unicode(e))
         raise
@@ -253,7 +254,7 @@ def resource_score(resource):
                             format_ = get_qa_format(resource.id)
         score_reason = ' '.join(score_reasons)
         format_ = format_ or None
-    except Exception, e:
+    except Exception as e:
         log.error('Unexpected error while calculating openness score %s: %s\nException: %s',
                   e.__class__.__name__,  unicode(e), traceback.format_exc())
         score_reason = _("Unknown error: %s") % str(e)

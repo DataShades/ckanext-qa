@@ -1,3 +1,5 @@
+from __future__ import print_function
+from __future__ import absolute_import
 import logging
 from functools import wraps
 import json
@@ -11,7 +13,7 @@ from nose.tools import assert_equal
 
 from ckanext.archiver.tasks import update_package
 
-from mock_remote_server import MockEchoTestServer
+from .mock_remote_server import MockEchoTestServer
 
 # enable celery logging for when you run nosetests -s
 log = logging.getLogger('ckanext.archiver.tasks')
@@ -121,12 +123,12 @@ class TestLinkChecker(ControllerTestCase):
         # accept, because browsers accept this
         # see discussion: http://trac.ckan.org/ticket/318
         result = self.check_link(url)
-        print result
+        print(result)
         assert_equal(result['url_errors'], [])
 
     @with_mock_url('?status=200 ')
     def test_trailing_whitespace(self, url):
         # accept, because browsers accept this
         result = self.check_link(url)
-        print result
+        print(result)
         assert_equal(result['url_errors'], [])

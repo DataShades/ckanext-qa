@@ -8,6 +8,7 @@ from time import sleep
 from wsgiref.simple_server import make_server
 import urllib2
 import socket
+from functools import reduce
 
 
 class MockHTTPServer(object):
