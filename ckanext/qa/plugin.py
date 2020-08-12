@@ -26,6 +26,7 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
 
     if p.toolkit.check_ckan_version('2.9'):
         p.implements(p.IBlueprint)
+        p.implements(p.IClick)
     else:
         p.implements(p.IRoutes, inherit=True)
 
@@ -34,6 +35,12 @@ class QAPlugin(p.SingletonPlugin, p.toolkit.DefaultDatasetForm):
 
     def update_config(self, config):
         p.toolkit.add_template_directory(config, 'templates')
+
+    # IClick
+
+    def get_commands(self):
+        from ckanext.qa.cli import get_commands
+        return get_commands()
 
     # IBlueprint
 
